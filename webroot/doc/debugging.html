@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Débogage — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Débogage</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html" class="active">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Débogage</h1>
+
+            <h2>Checklist</h2>
+            <ul class="checklist">
+                <li>Console navigateur — erreurs de directive ou HTTP 4xx.</li>
+                <li>Onglet <strong>Network</strong> — requête <code>POST /cake-wire/update</code>, corps JSON, réponse <code>{ html, state }</code>.</li>
+                <li>Meta <code>csrfToken</code> présente dans le <code>&lt;head&gt;</code>.</li>
+                <li>Ordre scripts : morphdom → cake-wire → Alpine.</li>
+                <li>Paramètre <code>?v=</code> sur <code>cake-wire.js</code> après mise à jour du plugin (hard refresh).</li>
+            </ul>
+
+            <h2>Codes HTTP</h2>
+            <table>
+                <thead>
+                    <tr><th>Code</th><th Cause fréquente</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>403</strong></td><td>Token CSRF manquant ou invalide</td></tr>
+                    <tr><td><strong>400</strong></td><td>Action absente de <code>$actions</code>, alias inconnu, payload invalide</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Erreurs JavaScript</h2>
+            <table>
+                <thead>
+                    <tr><th>Message</th><th>Piste</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>cakewireShell is not defined</code> / <code>wireIsLoading is not defined</code></td>
+                        <td>Alpine démarré avant <code>cake-wire.js</code>, ou cache JS obsolète</td>
+                    </tr>
+                    <tr>
+                        <td><code>CakeWire is not mounted yet</code></td>
+                        <td>Clic avant fin du <code>init()</code> ; erreur JS antérieure</td>
+                    </tr>
+                    <tr>
+                        <td><code>Invalid CakeWire action expression</code></td>
+                        <td>Syntaxe d’action incorrecte dans une directive</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Tests PHPUnit</h2>
+            <p>Simulez l’endpoint avec en-têtes CSRF et JSON :</p>
+            <pre><code>$this-&gt;configRequest([
+    'headers' =&gt; [
+        'Accept' =&gt; 'application/json',
+        'Content-Type' =&gt; 'application/json',
+        'X-CSRF-Token' =&gt; $token,
+    ],
+    'cookies' =&gt; ['csrfToken' =&gt; $token],
+]);
+$this-&gt;post('/cake-wire/update', json_encode([
+    'component' =&gt; 'counter',
+    'state' =&gt; ['count' =&gt; 0],
+    'action' =&gt; 'increment',
+    'params' =&gt; [],
+]));</code></pre>
+
+            <h2>wire:navigate</h2>
+            <p>
+                Vérifiez la zone <code>[data-cakewire-navigate]</code> dans le layout.
+                Après navigation SPA, Alpine réinitialise les composants du fragment injecté.
+            </p>
+
+            <footer class="doc-footer">
+                <a href="examples.html">Suivant : Exemples →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Directives wire:* — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Directives wire:*</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html" class="active">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Directives <code>wire:*</code></h1>
+            <p class="lead">
+                Les directives courantes sont compilées en PHP (<code>WireDirectiveCompiler</code>).
+                <code>cake-wire.js</code> complète au montage et après chaque réponse AJAX
+                (<code>poll</code>, <code>init</code>, <code>dirty</code>, …).
+            </p>
+
+            <h2 id="model">Liaison — <code>wire:model</code></h2>
+            <p>Comme Livewire 3 : <code>wire:model</code> est <strong>différé</strong> (sync au <code>change</code>).</p>
+            <table>
+                <thead>
+                    <tr><th>Directive</th><th>Comportement</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>wire:model="prop"</code></td><td>Sync au <code>change</code></td></tr>
+                    <tr><td><code>wire:model.live="prop"</code></td><td>Sync à la saisie (debounce 150 ms) + validation live</td></tr>
+                    <tr><td><code>wire:model.live.debounce.300ms="prop"</code></td><td>Debounce personnalisé</td></tr>
+                    <tr><td><code>wire:model.live.throttle.150ms="prop"</code></td><td>Throttle</td></tr>
+                    <tr><td><code>wire:model.blur="prop"</code></td><td>Sync au blur</td></tr>
+                    <tr><td><code>wire:model.number="prop"</code></td><td>Cast numérique</td></tr>
+                    <tr><td><code>wire:model.boolean="prop"</code></td><td>Booléen (checkbox)</td></tr>
+                </tbody>
+            </table>
+            <pre><code>&lt;input type="text" wire:model.live.debounce.200ms="title"&gt;
+&lt;textarea wire:model="content"&gt;&lt;/textarea&gt;
+&lt;input type="checkbox" wire:model.boolean="published"&gt;</code></pre>
+
+            <h2>Actions &amp; événements</h2>
+            <p>Toute directive <code>wire:&lt;événement&gt;</code> non réservée devient un listener Alpine.</p>
+            <table>
+                <thead>
+                    <tr><th>Directive</th><th>Usage</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>wire:click="save"</code></td><td>Clic</td></tr>
+                    <tr><td><code>wire:submit="save"</code></td><td>Formulaire (<code>prevent</code> par défaut)</td></tr>
+                    <tr><td><code>wire:keydown.enter="search"</code></td><td>Touche Entrée</td></tr>
+                    <tr><td><code>wire:keyup</code>, <code>wire:mouseenter</code>, …</td><td>Autres événements DOM</td></tr>
+                </tbody>
+            </table>
+            <pre><code>&lt;button wire:click="increment"&gt;+&lt;/button&gt;
+&lt;button wire:click="add(2, 'note')"&gt;Add&lt;/button&gt;
+&lt;button wire:click="$refresh"&gt;Rafraîchir&lt;/button&gt;</code></pre>
+            <p>Paramètres : entiers, floats, booléens, <code>null</code>, chaînes <code>'…'</code> / <code>"…"</code>.</p>
+
+            <h2 id="confirm"><code>wire:confirm</code></h2>
+            <pre><code>&lt;button wire:click="delete" wire:confirm="Supprimer ?"&gt;Supprimer&lt;/button&gt;</code></pre>
+
+            <h2 id="loading"><code>wire:loading</code> et <code>wire:target</code></h2>
+            <table>
+                <thead>
+                    <tr><th>Directive</th><th>Effet</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>wire:loading</code></td><td>Visible pendant une requête</td></tr>
+                    <tr><td><code>wire:loading.remove</code></td><td>Visible sauf pendant le chargement</td></tr>
+                    <tr><td><code>wire:loading.attr</code></td><td><code>disabled</code> pendant le chargement</td></tr>
+                    <tr><td><code>wire:loading.class="opacity-50"</code></td><td>Classe conditionnelle</td></tr>
+                    <tr><td><code>wire:loading.delay.200ms</code></td><td>Affichage après délai</td></tr>
+                    <tr><td><code>wire:target="save"</code></td><td>Filtre sur une action ou une propriété sync</td></tr>
+                </tbody>
+            </table>
+
+            <h2 id="dirty"><code>wire:dirty</code></h2>
+            <p>Compare <code>state</code> à <code>serverState</code> (dernière réponse serveur).</p>
+            <ul>
+                <li><code>wire:dirty</code> — état global modifié</li>
+                <li><code>wire:dirty="title"</code> — une propriété</li>
+                <li><code>wire:dirty.remove</code>, <code>wire:dirty.class</code></li>
+            </ul>
+
+            <h2 id="init"><code>wire:init</code></h2>
+            <pre><code>&lt;div wire:init="loadData"&gt;...&lt;/div&gt;</code></pre>
+            <p>Appelle l’action (ou <code>$refresh</code>) une seule fois au premier montage Alpine.</p>
+
+            <h2 id="poll"><code>wire:poll</code></h2>
+            <pre><code>&lt;div wire:poll.5s="refresh"&gt;...&lt;/div&gt;
+&lt;div wire:poll.30s="$refresh"&gt;&lt;/div&gt;</code></pre>
+            <p>Suffixes : <code>.5s</code>, <code>.2m</code>, <code>.1h</code>, <code>.1d</code> (défaut <code>2s</code>).</p>
+
+            <h2 id="dom">DOM — ignore, cloak, key</h2>
+            <table>
+                <thead>
+                    <tr><th>Directive</th><th>Effet</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>wire:ignore</code></td><td><code>x-ignore</code> — sous-arbre non géré par Alpine/morph</td></tr>
+                    <tr><td><code>wire:cloak</code></td><td>Masqué jusqu’à init</td></tr>
+                    <tr><td><code>wire:key="id"</code></td><td>Clé morphdom (<code>data-cakewire-key</code>)</td></tr>
+                </tbody>
+            </table>
+
+            <h2 id="events"><code>$dispatch</code> et <code>wire:on</code></h2>
+            <pre><code>&lt;button wire:click="$dispatch('item-added', { id: 1 })"&gt;Publier&lt;/button&gt;
+&lt;button wire:click="$dispatch('item-added', { id: 1 })-&gt;to('event-listener')"&gt;Cibler&lt;/button&gt;
+
+&lt;section wire:on:item-added="onItemAdded"&gt;...&lt;/section&gt;</code></pre>
+            <p>L’action réceptrice doit être dans <code>$actions</code>. Alias via <code>data-cakewire-alias</code>.</p>
+
+            <h2 id="validation">Erreurs — <code>wire:error</code> / <code>@error</code></h2>
+            <pre><code>&lt;input wire:model.live="email"&gt;
+&lt;span wire:error="email"&gt;&lt;/span&gt;</code></pre>
+            <p>Équivalent helper : <code>&lt;?= $this-&gt;CakeWire-&gt;error('email') ?&gt;</code></p>
+
+            <h2 id="upload">Upload fichier</h2>
+            <pre><code>&lt;input type="file" wire:model="avatar" accept="image/*"&gt;</code></pre>
+            <p>Requête <code>multipart/form-data</code> ; stockage <code>tmp/cakewire_uploads/</code>.</p>
+
+            <h2 id="navigate"><code>wire:navigate</code></h2>
+            <pre><code>&lt;a href="/contact" wire:navigate&gt;Contact&lt;/a&gt;
+&lt;main data-cakewire-navigate&gt;...&lt;/main&gt;</code></pre>
+            <p>Délégation document sur <code>a[href][wire:navigate]</code>. Voir <a href="morph-dom.html">Morph DOM</a> pour la mise à jour de la zone.</p>
+
+            <h2 id="offline"><code>wire:offline</code></h2>
+            <pre><code>&lt;div wire:offline&gt;Vous êtes hors ligne.&lt;/div&gt;</code></pre>
+
+            <footer class="doc-footer">
+                <a href="morph-dom.html">Suivant : Morph DOM →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

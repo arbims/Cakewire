@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Runtime — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Runtime Alpine.js et compilation des directives</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html" class="active">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Runtime &amp; montage</h1>
+
+            <h2>Deux couches : PHP compile, JS complète</h2>
+            <table>
+                <thead>
+                    <tr><th>Étape</th><th>Où</th><th>Rôle</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Premier HTML</td>
+                        <td><code>WireDirectiveCompiler</code> (PHP)</td>
+                        <td>Transforme <code>wire:click</code>, <code>wire:model</code>, <code>wire:loading</code>, <code>wire:error</code>, etc. en attributs Alpine avant envoi au navigateur.</td>
+                    </tr>
+                    <tr>
+                        <td>Après AJAX</td>
+                        <td><code>cake-wire.js</code> (<code>bindWire</code>)</td>
+                        <td>Compile les directives restantes (<code>wire:poll</code>, <code>wire:init</code>, <code>wire:dirty</code>, …), puis <code>Alpine.initTree()</code>.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Exemples de compilation serveur</h3>
+            <table>
+                <thead>
+                    <tr><th>Dans la vue PHP</th><th>Alpine généré (extrait)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>wire:click="increment"</code></td><td><code>x-on:click.prevent="handleWireClick($event, 'increment')"</code></td></tr>
+                    <tr><td><code>wire:model.live="email"</code></td><td><code>x-model="state.email"</code> + debounce sync</td></tr>
+                    <tr><td><code>wire:loading wire:target="increment"</code></td><td><code>x-show="wireIsLoading('increment')"</code></td></tr>
+                    <tr><td><code>wire:error="email"</code></td><td><code>x-show</code> + <code>x-text</code> pour le message</td></tr>
+                    <tr><td><code>wire:key="user-1"</code></td><td><code>data-cakewire-key="user-1"</code> (morph DOM)</td></tr>
+                </tbody>
+            </table>
+
+            <p>
+                Les handlers <code>handleWireClick</code>, <code>handleWireSync</code>, <code>wireIsLoading</code>, …
+                sont définis dans <code>cakewireShell()</code> et délèguent à <code>runAction</code>, <code>sync</code>, etc.
+                une fois le blueprint runtime fusionné.
+            </p>
+
+            <h2>Montage d’un composant (navigateur)</h2>
+            <ol>
+                <li>Alpine instancie <code>cakewireShell()</code> (état vide + délégués).</li>
+                <li>Le hook <code>init()</code> du shell lit <code>data-cakewire-config</code>, construit le blueprint (<code>createComponent</code>) et fusionne état, <code>runAction</code>, <code>sync</code>, polls, etc.</li>
+                <li>Le <code>init()</code> du blueprint exécute <code>bindWire</code> pour les directives non compilées côté serveur.</li>
+            </ol>
+
+            <h2>API globale <code>window.CakeWire</code></h2>
+            <table>
+                <thead>
+                    <tr><th>API</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>CakeWire.mount(data, el)</code></td><td>Fusion manuelle du blueprint (legacy)</td></tr>
+                    <tr><td><code>CakeWire.component(options)</code></td><td>Blueprint JS depuis un objet config</td></tr>
+                    <tr><td><code>CakeWire.morphComponentDom(root, html)</code></td><td>Mise à jour DOM (debug)</td></tr>
+                    <tr><td><code>CakeWire.navigate(url)</code></td><td>Navigation <code>wire:navigate</code></td></tr>
+                    <tr><td><code>CakeWire.dispatch(name, detail)</code></td><td>Événement navigateur</td></tr>
+                    <tr><td><code>CakeWire.dispatchTo(name, detail, alias)</code></td><td>Événement ciblé sur un alias</td></tr>
+                    <tr><td><code>CakeWire.bindWire(root)</code></td><td>Compilation client des <code>wire:*</code></td></tr>
+                </tbody>
+            </table>
+
+            <footer class="doc-footer">
+                <a href="lifecycle.html">Suivant : Cycle de vie →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

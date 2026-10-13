@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Accueil — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Composants full-stack pour CakePHP 5 — modèle Livewire 3, runtime Alpine.js 3</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html" class="active">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Documentation CakeWire</h1>
+            <p class="lead">
+                CakeWire reproduit le modèle
+                <a href="https://livewire.laravel.com/docs/3.x" target="_blank" rel="noopener">Livewire 3</a>
+                pour <strong>CakePHP 5</strong> : composants PHP, état synchronisé avec le navigateur,
+                actions serveur, directives <code>wire:*</code> dans le HTML, et runtime
+                <a href="https://alpinejs.dev/" target="_blank" rel="noopener">Alpine.js 3</a>.
+            </p>
+
+            <h2>Principe</h2>
+            <p>
+                Le navigateur n’exécute jamais la logique métier. Il envoie l’état JSON du composant
+                et éventuellement le nom d’une action ; PHP met à jour l’état, re-rend le HTML interne,
+                et renvoie <code>{ "html", "state" }</code>. Le client met à jour le DOM via
+                <strong>morphdom</strong> (voir <a href="morph-dom.html">Morph DOM</a>).
+            </p>
+
+            <h2>Concepts clés</h2>
+            <table>
+                <thead>
+                    <tr><th>Livewire</th><th>CakeWire</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Composant PHP</td><td><code>CakeWire\Component\Component</code></td></tr>
+                    <tr><td>Propriétés publiques</td><td>État sérialisé (<code>dehydrate</code> / <code>hydrate</code>)</td></tr>
+                    <tr><td>Actions</td><td>Méthodes listées dans <code>$actions</code></td></tr>
+                    <tr><td><code>wire:model</code></td><td>Liaison champ ↔ propriété + requête AJAX</td></tr>
+                    <tr><td><code>return view('…')</code></td><td>Templates sous <code>templates/CakeWire/</code></td></tr>
+                    <tr><td>Endpoint Livewire</td><td><code>POST /cake-wire/update</code></td></tr>
+                </tbody>
+            </table>
+
+            <h2>Par où commencer</h2>
+            <ol>
+                <li><a href="installation.html">Installation</a> — plugin, helper, scripts, enregistrement des composants</li>
+                <li><a href="components.html">Composants &amp; vues</a> — <code>render()</code>, <code>view()</code>, syntaxe des templates</li>
+                <li><a href="directives.html">Directives wire:*</a> — modèle, actions, loading, validation, etc.</li>
+                <li><a href="examples.html">Exemples</a> — pages de démo dans l’application skeleton</li>
+            </ol>
+
+            <div class="note ok">
+                Cette documentation HTML est servie statiquement par le plugin :
+                <code>/cake_wire/doc/index.html</code> (chemin exact selon la config CakePHP).
+            </div>
+
+            <footer class="doc-footer">
+                CakeWire — MIT — Documentation générée pour le plugin CakePHP.
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

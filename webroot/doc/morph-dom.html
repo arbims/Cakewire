@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Morph DOM — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Mise à jour DOM avec morphdom</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html" class="active">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Morph DOM</h1>
+            <p class="lead">
+                Après chaque réponse AJAX et lors de <code>wire:navigate</code>, CakeWire met à jour le DOM avec
+                <a href="https://github.com/patrick-steele-idem/morphdom" target="_blank" rel="noopener">morphdom</a>
+                au lieu d’un remplacement brutal via <code>innerHTML</code>.
+            </p>
+
+            <h2>Pourquoi</h2>
+            <ul>
+                <li>Seuls les nœuds <strong>modifiés</strong> sont touchés.</li>
+                <li>Meilleure préservation du <strong>focus</strong> et moins de clignotement dans les listes.</li>
+                <li>Comportement plus proche de Livewire 3 qu’un remplacement HTML complet.</li>
+            </ul>
+
+            <h2>Comportement</h2>
+            <ul>
+                <li>Le nœud <code>x-data="cakewireShell()"</code> (wrapper) <strong>reste</strong> ; seuls ses <strong>enfants</strong> sont morphés.</li>
+                <li><code>wire:key="…"</code> → <code>data-cakewire-key</code> (PHP et JS) pour réconcilier les listes.</li>
+                <li><code>wire:ignore</code> (<code>x-ignore</code>) : le sous-arbre n’est pas mis à jour.</li>
+                <li>L’élément <strong>focus</strong> (input, textarea, select) n’est pas écrasé pendant la frappe.</li>
+                <li>Les inputs <code>type="file"</code> ne sont pas remplacés (limitation navigateur).</li>
+            </ul>
+
+            <h2>Chargement</h2>
+            <p><code>CakeWireHelper::runtimeScripts()</code> charge dans l’ordre :</p>
+            <ol>
+                <li><code>/cake_wire/js/morphdom.min.js</code></li>
+                <li><code>/cake_wire/js/cake-wire.js</code></li>
+                <li>Alpine.js (CDN)</li>
+            </ol>
+
+            <h2>Fallback</h2>
+            <p>Si <code>window.morphdom</code> est absent, CakeWire retombe sur <code>innerHTML</code>.</p>
+
+            <h2>API debug</h2>
+            <pre><code>CakeWire.morphComponentDom(rootElement, htmlStringFromServer);</code></pre>
+
+            <h2>Bonnes pratiques</h2>
+            <ul>
+                <li>Ajoutez <code>wire:key</code> sur chaque ligne de liste (<code>wire:key="user-<?= $id ?>"</code>).</li>
+                <li>Enveloppez du JS tiers ou des widgets dans <code>wire:ignore</code>.</li>
+                <li>Pour des UI très dynamiques Alpine, un <code>wire:ignore</code> ciblé peut être nécessaire (pas d’équivalent complet à <code>@alpinejs/morph</code>).</li>
+            </ul>
+
+            <footer class="doc-footer">
+                <a href="alpine-wire.html">Suivant : Objet $wire →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

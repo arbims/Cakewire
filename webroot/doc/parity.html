@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Parité Livewire — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Parité Livewire 3 et limites</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html" class="active">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Parité Livewire ↔ CakeWire</h1>
+
+            <table>
+                <thead>
+                    <tr><th>Fonctionnalité Livewire 3</th><th>CakeWire</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Composants + propriétés publiques</td><td>Oui</td></tr>
+                    <tr><td><code>render()</code> + <code>view('…')</code></td><td>Oui</td></tr>
+                    <tr><td><code>wire:model</code> différé / <code>.live</code> / <code>.blur</code></td><td>Oui</td></tr>
+                    <tr><td><code>.debounce</code> / <code>.throttle</code></td><td>Oui</td></tr>
+                    <tr><td><code>.number</code> / <code>.boolean</code></td><td>Oui</td></tr>
+                    <tr><td><code>wire:click</code>, <code>wire:submit</code>, événements</td><td>Oui</td></tr>
+                    <tr><td><code>wire:confirm</code>, <code>$refresh</code></td><td>Oui</td></tr>
+                    <tr><td><code>wire:loading</code> (+ target, delay, class, …)</td><td>Oui</td></tr>
+                    <tr><td><code>wire:dirty</code>, <code>wire:init</code>, <code>wire:poll</code></td><td>Oui</td></tr>
+                    <tr><td><code>wire:ignore</code>, <code>wire:cloak</code>, <code>wire:key</code></td><td>Oui (morphdom)</td></tr>
+                    <tr><td><code>wire:offline</code></td><td>Basique</td></tr>
+                    <tr><td><code>$wire</code></td><td>Oui</td></tr>
+                    <tr><td>Validation / <code>wire:error</code></td><td>Oui</td></tr>
+                    <tr><td><code>wire:navigate</code></td><td>Oui</td></tr>
+                    <tr><td>Upload <code>wire:model</code></td><td>Oui</td></tr>
+                    <tr><td><code>$dispatch</code> / <code>wire:on</code></td><td>Oui</td></tr>
+                    <tr><td>Composants imbriqués / <code>@livewire</code></td><td><strong>Non</strong></td></tr>
+                    <tr><td>Lazy / defer / <code>@persist</code></td><td><strong>Non</strong></td></tr>
+                    <tr><td><code>wire:model</code> sur modèles ORM entiers</td><td><strong>Non</strong></td></tr>
+                    <tr><td><code>Livewire::test()</code></td><td>PHPUnit + HTTP <code>/cake-wire/update</code></td></tr>
+                </tbody>
+            </table>
+
+            <h2>Limites connues</h2>
+            <ul>
+                <li><strong>Morph</strong> sans plugin Alpine dédié — parfois <code>wire:ignore</code> pour JS tiers.</li>
+                <li><strong>Pas de file d’attente offline</strong> — échec réseau = pas de retry automatique.</li>
+                <li><strong>Alpine requis</strong> — sans JS, HTML initial uniquement.</li>
+                <li><strong>Une action par requête</strong> — pas de batching avancé Livewire v3.</li>
+            </ul>
+
+            <p>
+                Référence officielle :
+                <a href="https://livewire.laravel.com/docs/3.x" target="_blank" rel="noopener">Livewire 3 docs</a>.
+            </p>
+
+            <footer class="doc-footer">
+                <a href="debugging.html">Suivant : Débogage →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

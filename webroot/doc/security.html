@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sécurité — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Sécurité</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html" class="active">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Sécurité</h1>
+
+            <h2>Whitelist d’actions</h2>
+            <p>
+                Seules les méthodes listées dans <code>protected array $actions</code> peuvent être invoquées
+                via <code>wire:click</code>, <code>wire:submit</code>, <code>wire:on:*</code>, etc.
+                Toute autre action renvoie une erreur <strong>400</strong>.
+            </p>
+
+            <h2>Enregistrement des composants</h2>
+            <p>
+                L’alias du payload (<code>component</code>) doit correspondre à une entrée
+                <code>Configure::write('CakeWire.components.*')</code>.
+                Ne exposez que les classes destinées à être montées côté client.
+            </p>
+
+            <h2>État client non fiable</h2>
+            <p>
+                <code>state</code> JSON peut être modifié dans les DevTools. Ne jamais se fier au client pour :
+            </p>
+            <ul>
+                <li>authentification ou autorisation ;</li>
+                <li>ownership d’enregistrements ;</li>
+                <li>validation métier critique.</li>
+            </ul>
+            <p>Re-validez toujours en PHP (session, policies, requêtes ORM).</p>
+
+            <h2>CSRF</h2>
+            <p>
+                Le runtime envoie <code>X-CSRF-Token</code> (meta <code>csrfToken</code> dans le layout via
+                <code>headAssets()</code>). Sans token valide : réponse <strong>403</strong>.
+            </p>
+
+            <h2>Propriétés hydratées</h2>
+            <ul>
+                <li>Seules les propriétés <strong>publiques</strong> non statiques sont hydratées depuis le client.</li>
+                <li>Les propriétés <code>readonly</code> sont ignorées à l’hydratation.</li>
+                <li><code>state._errors</code> n’est jamais appliqué depuis le client (<code>hydrate</code> unset).</li>
+            </ul>
+
+            <h2>Uploads</h2>
+            <p>
+                Seuls les champs déclarés dans <code>$uploads</code> sont acceptés.
+                Fichiers stockés sous <code>tmp/cakewire_uploads/</code> — configurez une stratégie de production
+                (validation MIME, taille, stockage sécurisé).
+            </p>
+
+            <footer class="doc-footer">
+                <a href="parity.html">Suivant : Parité Livewire →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Installation — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Installation et configuration</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html" class="active">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Installation</h1>
+
+            <h2>Composer et plugin</h2>
+            <pre><code>composer require cakewire/cakewire</code></pre>
+            <p>Fichier <code>config/plugins.php</code> :</p>
+            <pre><code>&lt;?php
+return [
+    'CakeWire\CakeWirePlugin' =&gt; [],
+];</code></pre>
+
+            <h2>Helper CakePHP</h2>
+            <p>Dans <code>src/View/AppView.php</code> :</p>
+            <pre><code>public function initialize(): void
+{
+    parent::initialize();
+    $this-&gt;addHelper('CakeWire.CakeWire');
+}</code></pre>
+
+            <h2>Layout — assets runtime</h2>
+            <p>Recommandé (séparer head et body) :</p>
+            <pre><code>&lt;!-- dans &lt;head&gt; --&gt;
+&lt;?= $this-&gt;CakeWire-&gt;headAssets() ?&gt;
+
+&lt;!-- avant &lt;/body&gt; --&gt;
+&lt;?= $this-&gt;CakeWire-&gt;runtimeScripts() ?&gt;</code></pre>
+            <p>Équivalent en une ligne : <code>&lt;?= $this-&gt;CakeWire-&gt;scripts() ?&gt;</code></p>
+
+            <table>
+                <thead>
+                    <tr><th>Méthode</th><th>Contenu</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>headAssets()</code></td><td>Meta CSRF (<code>csrfToken</code>), CSS <code>wire:loading</code> / <code>wire:cloak</code></td></tr>
+                    <tr><td><code>runtimeScripts()</code></td><td><code>morphdom.min.js</code>, <code>cake-wire.js</code>, Alpine.js 3 (CDN, <code>defer</code>)</td></tr>
+                    <tr><td><code>scripts()</code></td><td><code>headAssets()</code> + <code>runtimeScripts()</code></td></tr>
+                </tbody>
+            </table>
+
+            <div class="note warn">
+                <strong>Ordre obligatoire :</strong> <code>morphdom.min.js</code> puis <code>cake-wire.js</code>
+                <em>sans</em> <code>defer</code>, <em>avant</em> Alpine (<code>defer</code>).
+                Alpine enregistre <code>cakewireShell</code> dans <code>alpine:init</code> — le runtime CakeWire doit déjà être chargé.
+            </div>
+
+            <p>
+                Les scripts incluent un paramètre de version (<code>?v=…</code>).
+                Après mise à jour du plugin, incrémentez <code>CakeWireHelper::RUNTIME_VERSION</code>
+                si les utilisateurs voient un ancien JS en cache.
+            </p>
+
+            <h2>Enregistrer un composant</h2>
+            <p><code>config/bootstrap.php</code> :</p>
+            <pre><code>use Cake\Core\Configure;
+
+Configure::write('CakeWire.components.counter', \App\CakeWire\CounterComponent::class);
+Configure::write('CakeWire.components.contact-form', \App\CakeWire\ContactFormComponent::class);</code></pre>
+            <p>Alias autorisés : <code>[a-z][a-z0-9-]*</code> uniquement.</p>
+
+            <h2>Monter un composant dans une vue</h2>
+            <pre><code>&lt;?= $this-&gt;CakeWire-&gt;component('counter', ['count' =&gt; 0]) ?&gt;</code></pre>
+            <p>HTML produit (simplifié) :</p>
+            <pre><code>&lt;div
+  data-cakewire-config="{&amp;quot;component&amp;quot;:&amp;quot;counter&amp;quot;,...}"
+  data-cakewire-alias="counter"
+  x-data="cakewireShell()"&gt;
+  &lt;!-- HTML interne du composant --&gt;
+&lt;/div&gt;</code></pre>
+            <ul>
+                <li><code>data-cakewire-config</code> — JSON (alias, endpoint, état initial)</li>
+                <li><code>data-cakewire-alias</code> — ciblage <code>$dispatch-&gt;to('…')</code></li>
+                <li><code>x-data="cakewireShell()"</code> — racine Alpine (ne pas mettre <code>CakeWire.shell()</code> dans le HTML)</li>
+            </ul>
+
+            <h2>Configuration optionnelle</h2>
+            <pre><code>Configure::write('CakeWire.templates', ROOT . 'templates' . DS . 'CakeWire' . DS);</code></pre>
+
+            <footer class="doc-footer">
+                <a href="runtime.html">Suivant : Runtime &amp; montage →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

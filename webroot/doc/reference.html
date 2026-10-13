@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Référence — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Référence rapide</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html" class="active">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Référence rapide</h1>
+
+            <h2>Directives supportées</h2>
+            <pre><code>wire:model[.live|.blur|.number|.boolean][.debounce.Nms|.throttle.Nms]="prop"
+wire:click[.prevent]="action"
+wire:submit="action"
+wire:keydown[.enter|...]="action"
+wire:keyup, wire:mouseenter, wire:mouseleave, …
+wire:confirm="message"
+wire:loading[.remove|.attr|.class|.delay.Nms]
+wire:target="action" | "a, b" | "propertyName"
+wire:dirty[.remove|.class][="property"]
+wire:init="action"
+wire:poll[.5s|.2m|.1h|.1d]="action|$refresh"
+wire:ignore
+wire:cloak
+wire:key="unique"
+wire:offline[.class]
+wire:error="field"
+wire:on:event-name="handler"
+wire:navigate (sur &lt;a href="..."&gt;)
+
+$refresh (expression d'action)
+$wire (magic Alpine)
+$dispatch('event', detail)[-&gt;to('alias')]</code></pre>
+
+            <h2>Endpoint</h2>
+            <pre><code>POST /cake-wire/update
+Content-Type: application/json
+X-CSRF-Token: …
+
+{ "component": "alias", "state": { … }, "action": "…", "params": [] }</code></pre>
+
+            <h2>PHP</h2>
+            <pre><code>use function CakeWire\view;
+
+public function render(): ComponentTemplate {
+    return view('mon-template');
+}
+
+protected array $actions = ['save'];
+protected array $validationRules = ['email' =&gt; 'required|email'];
+protected array $uploads = ['avatar'];</code></pre>
+
+            <h2>Template</h2>
+            <pre><code>{{ $title }}
+{!! $html !!}
+@error('field')
+&lt;button wire:click="save"&gt;…&lt;/button&gt;</code></pre>
+
+            <h2>Helper</h2>
+            <pre><code>&lt;?= $this-&gt;CakeWire-&gt;component('counter', ['count' =&gt; 0]) ?&gt;
+&lt;?= $this-&gt;CakeWire-&gt;scripts() ?&gt;</code></pre>
+
+            <footer class="doc-footer">
+                <a href="index.html">← Retour à l’accueil</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

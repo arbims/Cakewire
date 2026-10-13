@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Composants &amp; vues — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>API PHP, render(), view(), templates</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html" class="active">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Composants &amp; vues</h1>
+
+            <h2>Classe de base</h2>
+            <p>Étendez <code>CakeWire\Component\Component</code>. Déclarez :</p>
+            <ul>
+                <li>propriétés <strong>publiques</strong> pour l’état synchronisé ;</li>
+                <li><code>protected array $actions = ['save', …];</code> — whitelist des méthodes appelables ;</li>
+                <li>optionnel : <code>$validationRules</code>, <code>$uploads</code>.</li>
+            </ul>
+
+            <h2><code>render()</code> et <code>view()</code></h2>
+            <pre><code>use CakeWire\Component\Component;
+use CakeWire\View\ComponentTemplate;
+
+use function CakeWire\view;
+
+final class ShowPosts extends Component
+{
+    public function render(): ComponentTemplate
+    {
+        return view('posts/list');
+    }
+}</code></pre>
+            <p>Fichier : <code>templates/CakeWire/posts/list.php</code></p>
+
+            <h3>Résolution des noms</h3>
+            <table>
+                <thead>
+                    <tr><th>Argument <code>view()</code></th><th>Fichier</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>'counter'</code></td><td><code>templates/CakeWire/counter.php</code></td></tr>
+                    <tr><td><code>'posts/list'</code></td><td><code>templates/CakeWire/posts/list.php</code></td></tr>
+                    <tr><td><code>'livewire.show-posts'</code></td><td><code>templates/CakeWire/show-posts.php</code></td></tr>
+                    <tr><td><code>'cakewire.posts.list'</code></td><td><code>templates/CakeWire/posts/list.php</code></td></tr>
+                </tbody>
+            </table>
+            <p>Préfixes <code>livewire.</code> / <code>cakewire.</code> ignorés ; <code>.</code> → <code>/</code>. Pattern : <code>[a-z][a-z0-9\-\/]*</code>.</p>
+
+            <div class="note">
+                Le helper <code>CakeWire\view()</code> est chargé via Composer (<code>src/functions.php</code>).
+                Exécutez <code>composer dump-autoload</code> après installation du plugin.
+            </div>
+
+            <h2>Syntaxe des templates</h2>
+            <p>Pas de Blade — fichiers <code>.php</code> avec raccourcis :</p>
+            <table>
+                <thead>
+                    <tr><th>Syntaxe</th><th>Effet</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>{{ $count }}</code></td><td>Échappement HTML</td></tr>
+                    <tr><td><code>{!! $feedback !!}</code></td><td>HTML brut</td></tr>
+                    <tr><td><code>@error('email')</code></td><td>Span <code>wire:error="email"</code></td></tr>
+                    <tr><td><code>wire:*</code></td><td>Directives compilées au rendu</td></tr>
+                </tbody>
+            </table>
+            <p>PHP classique autorisé. Les propriétés publiques du composant sont extraites comme variables.</p>
+
+            <h3>Exemple complet</h3>
+            <p><strong>Composant</strong> :</p>
+            <pre><code>final class CounterComponent extends Component
+{
+    public int $count = 0;
+    protected array $actions = ['increment', 'decrement', 'reset'];
+
+    public function increment(): void { $this->count++; }
+
+    public function render(): ComponentTemplate
+    {
+        return view('counter');
+    }
+}</code></pre>
+            <p><strong>Vue</strong> <code>templates/CakeWire/counter.php</code> :</p>
+            <pre><code>&lt;div&gt;
+    &lt;h1&gt;Compteur : {{ $count }}&lt;/h1&gt;
+    &lt;button type="button" wire:click="increment"&gt;+1&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+
+            <h2>Rétrocompatibilité</h2>
+            <ul>
+                <li>Sans surcharge de <code>render()</code> : inférence <code>CounterComponent</code> → <code>counter</code>, ou <code>protected string $view = '…';</code></li>
+                <li><code>render(): string</code> — HTML brut (tests, markup minimal)</li>
+            </ul>
+
+            <h2>Validation</h2>
+            <pre><code>protected array $validationRules = [
+    'email' =&gt; 'required|email|maxLength:255',
+    'name' =&gt; 'required|minLength:2',
+];
+
+public function submit(): void
+{
+    if (!$this-&gt;validate()) {
+        return;
+    }
+    // ...
+}</code></pre>
+            <p>Règles : <code>required</code>, <code>email</code>, <code>maxLength:N</code>, <code>minLength:N</code>.</p>
+            <p>Méthodes utiles : <code>addError</code>, <code>resetErrors</code>, <code>hasError</code>, <code>error('field')</code> dans le template via <code>@error</code>.</p>
+
+            <h2>Uploads</h2>
+            <pre><code>protected array $uploads = ['avatar'];
+public ?string $avatar = null;</code></pre>
+            <p>Voir <a href="directives.html#upload">Directives — upload</a>.</p>
+
+            <h2>Helper <code>CakeWireHelper</code></h2>
+            <table>
+                <thead>
+                    <tr><th>Méthode</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>component($alias, $props = [])</code></td><td>Monte le composant</td></tr>
+                    <tr><td><code>scripts()</code> / <code>headAssets()</code> / <code>runtimeScripts()</code></td><td>Assets</td></tr>
+                    <tr><td><code>model($property)</code></td><td>Attribut <code>wire:model</code></td></tr>
+                    <tr><td><code>click($action)</code></td><td>Attribut <code>wire:click</code></td></tr>
+                    <tr><td><code>error($field)</code></td><td>Span <code>wire:error</code></td></tr>
+                </tbody>
+            </table>
+
+            <footer class="doc-footer">
+                <a href="directives.html">Suivant : Directives wire:* →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

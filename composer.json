@@ -1,0 +1,23 @@
+{
+    "name": "cakewire/cakewire",
+    "description": "Live server-driven components for CakePHP powered by Alpine.js.",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2",
+        "cakephp/cakephp": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CakeWire\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CakeWire\\Test\\": "tests/"
+        }
+    }
+}

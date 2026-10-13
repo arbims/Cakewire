@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exemples — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Exemples dans l’application démo</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html" class="active">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Exemples (skeleton app)</h1>
+            <p class="lead">
+                Composants dans <code>src/CakeWire/</code>, templates dans <code>templates/CakeWire/</code>,
+                alias dans <code>config/bootstrap.php</code>.
+            </p>
+
+            <table>
+                <thead>
+                    <tr><th>URL</th><th>Alias</th><th>Sujet</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/counter</code></td>
+                        <td><code>counter</code></td>
+                        <td><code>view('counter')</code>, <code>wire:click</code>, <code>wire:loading</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>/contact</code></td>
+                        <td><code>contact-form</code></td>
+                        <td>Validation, <code>wire:model.live</code>, <code>wire:submit</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>/users</code></td>
+                        <td><code>users-list</code></td>
+                        <td>Filtres debounce, listes, <code>wire:key</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>/posts</code></td>
+                        <td><code>posts-list</code></td>
+                        <td>CRUD, validation, région <code>data-cakewire-region</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>/profile</code></td>
+                        <td><code>profile-upload</code></td>
+                        <td>Upload multipart, <code>$uploads</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>/events</code></td>
+                        <td><code>event-publisher</code>, <code>event-listener</code></td>
+                        <td><code>$dispatch</code>, <code>wire:on</code>, <code>-&gt;to('alias')</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Layout démo</h2>
+            <p><code>templates/layout/cakewire.php</code> — <code>headAssets()</code> + <code>runtimeScripts()</code>.</p>
+
+            <h2>Monter dans une vue CakePHP</h2>
+            <pre><code>&lt;?= $this-&gt;CakeWire-&gt;component('posts-list') ?&gt;</code></pre>
+
+            <footer class="doc-footer">
+                <a href="reference.html">Suivant : Référence rapide →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

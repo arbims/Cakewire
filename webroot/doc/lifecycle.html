@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cycle de vie — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Cycle de vie d’un composant</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html" class="active">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Cycle de vie</h1>
+
+            <h2>Étapes serveur + client</h2>
+            <ol>
+                <li><strong>Montage PHP</strong> — <code>ComponentRegistry</code> instancie la classe ; <code>mount($properties)</code> hydrate les propriétés publiques passées au helper.</li>
+                <li><strong>Premier rendu</strong> — <code>renderHtml()</code> : vue PHP, compilation <code>WireDirectiveCompiler</code>, HTML injecté dans le wrapper du helper.</li>
+                <li><strong>Init Alpine</strong> — <code>cakewireShell()</code> + <code>init()</code> ; <code>bindWire</code> pour poll, init, dirty, etc.</li>
+                <li><strong>Interaction</strong> — clic, submit, <code>wire:model</code>, poll → <code>POST /cake-wire/update</code>.</li>
+                <li><strong>Traitement PHP</strong> — <code>hydrate($state)</code>, uploads, action autorisée, sync live, <code>renderHtml()</code>.</li>
+                <li><strong>Patch DOM</strong> — morphdom sur les enfants du wrapper ; <code>bindWire</code> ; <code>Alpine.initTree()</code> ; restauration du focus si besoin.</li>
+            </ol>
+
+            <h2>Payload de requête (action)</h2>
+            <pre><code>{
+  "component": "counter",
+  "state": { "count": 1 },
+  "action": "increment",
+  "params": []
+}</code></pre>
+
+            <h2>Payload (sync / wire:model.live)</h2>
+            <pre><code>{
+  "component": "contact-form",
+  "state": { "email": "user@example.com", ... },
+  "syncProperty": "email"
+}</code></pre>
+            <p>
+                Sans <code>action</code> : synchronisation + re-rendu uniquement.
+                Avec <code>$validationRules</code>, le serveur exécute <code>validateOnly()</code>
+                et le hook <code>updated{Property}()</code> (ex. <code>updatedEmail()</code>).
+            </p>
+
+            <h2>Réponse JSON</h2>
+            <pre><code>{
+  "html": "&lt;div&gt;...&lt;/div&gt;",
+  "state": { "count": 2 }
+}</code></pre>
+            <p>Les erreurs de validation sont dans <code>state._errors</code> (non hydratées depuis le client).</p>
+
+            <h2>Méthodes PHP du composant</h2>
+            <table>
+                <thead>
+                    <tr><th>Méthode</th><th>Rôle</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>mount(array $properties)</code></td><td>Valeurs initiales au premier montage</td></tr>
+                    <tr><td><code>hydrate(array $state)</code></td><td>État reçu du navigateur (publiques, non readonly)</td></tr>
+                    <tr><td><code>dehydrate(): array</code></td><td>Export JSON vers le client</td></tr>
+                    <tr><td><code>render()</code></td><td><code>view('…')</code> ou HTML string</td></tr>
+                    <tr><td><code>renderHtml(): string</code></td><td>Final — appelé par le helper et l’endpoint (ne pas surcharger)</td></tr>
+                </tbody>
+            </table>
+
+            <footer class="doc-footer">
+                <a href="components.html">Suivant : Composants &amp; vues →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Objet $wire — CakeWire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1>CakeWire</h1>
+        <p>Objet magique $wire (Alpine)</p>
+    </header>
+    <div class="layout">
+        <nav class="doc-nav" aria-label="Documentation">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="runtime.html">Runtime &amp; montage</a></li>
+                <li><a href="lifecycle.html">Cycle de vie</a></li>
+                <li><a href="components.html">Composants &amp; vues</a></li>
+                <li><a href="directives.html">Directives wire:*</a></li>
+                <li><a href="morph-dom.html">Morph DOM</a></li>
+                <li><a href="alpine-wire.html" class="active">Objet $wire</a></li>
+                <li><a href="security.html">Sécurité</a></li>
+                <li><a href="parity.html">Parité Livewire</a></li>
+                <li><a href="debugging.html">Débogage</a></li>
+                <li><a href="examples.html">Exemples</a></li>
+                <li><a href="reference.html">Référence rapide</a></li>
+            </ul>
+        </nav>
+        <main class="doc-content">
+            <h1>Objet magique <code>$wire</code></h1>
+            <p>
+                Comme Livewire, CakeWire expose <code>$wire</code> dans les expressions Alpine
+                à l’intérieur d’un composant monté (ancêtre <code>[data-cakewire-config]</code>).
+            </p>
+
+            <pre><code>&lt;input type="text" wire:model.live="title"&gt;
+&lt;p x-text="$wire.title.length + ' caractères'"&gt;&lt;/p&gt;
+&lt;button type="button" x-on:click="$wire.title = ''"&gt;Effacer (local)&lt;/button&gt;
+&lt;button type="button" x-on:click="$wire.set('title', '')"&gt;Effacer (sync serveur)&lt;/button&gt;</code></pre>
+
+            <table>
+                <thead>
+                    <tr><th>API</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>$wire.prop</code></td><td>Lecture / écriture locale de <code>state.prop</code></td></tr>
+                    <tr><td><code>$wire.get('prop')</code></td><td>Lecture</td></tr>
+                    <tr><td><code>$wire.set('prop', value)</code></td><td>Écriture + <code>sync('prop')</code></td></tr>
+                    <tr><td><code>$wire.runAction('action', …)</code></td><td>Action serveur</td></tr>
+                    <tr><td><code>$wire.refresh()</code></td><td>Re-rendu serveur (<code>$refresh</code>)</td></tr>
+                </tbody>
+            </table>
+
+            <div class="note">
+                Enregistrement Alpine : <code>Alpine.magic('wire', …)</code> dans <code>cake-wire.js</code>.
+            </div>
+
+            <footer class="doc-footer">
+                <a href="security.html">Suivant : Sécurité →</a>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
