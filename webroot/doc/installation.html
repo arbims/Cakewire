@@ -32,9 +32,36 @@
         <main class="doc-content">
             <h1>Installation</h1>
 
-            <h2>Composer et plugin</h2>
+            <p class="lead">
+                Packagist :
+                <a href="https://packagist.org/packages/cakewire/cakewire" target="_blank" rel="noopener">cakewire/cakewire</a>
+                — Code :
+                <a href="https://github.com/arbims/Cakewire" target="_blank" rel="noopener">github.com/arbims/Cakewire</a>
+            </p>
+
+            <h2>Composer (release stable)</h2>
+            <p>Nécessite un tag semver sur GitHub (ex. <code>v1.0.0</code>) indexé par Packagist.</p>
             <pre><code>composer require cakewire/cakewire</code></pre>
-            <p>Fichier <code>config/plugins.php</code> :</p>
+
+            <h2>Composer (branche <code>main</code>)</h2>
+            <p>Si Packagist ne propose que <code>dev-main</code> et que votre projet exige <code>stable</code> :</p>
+            <pre><code>composer require cakewire/cakewire:dev-main@dev</code></pre>
+
+            <h2>Dépôt VCS direct</h2>
+            <pre><code>{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/arbims/Cakewire"
+        }
+    ],
+    "require": {
+        "cakewire/cakewire": "^1.0"
+    }
+}</code></pre>
+
+            <h2>Plugin CakePHP</h2>
+            <p>Fichier <code>config/plugins.php</code> (souvent auto via <code>cakephp/plugin-installer</code>) :</p>
             <pre><code>&lt;?php
 return [
     'CakeWire\CakeWirePlugin' =&gt; [],

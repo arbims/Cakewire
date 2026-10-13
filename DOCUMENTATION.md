@@ -41,11 +41,52 @@ Le navigateur n’exécute jamais la logique métier : il envoie l’état et le
 
 ### Composer et plugin
 
+Package Packagist : **[cakewire/cakewire](https://packagist.org/packages/cakewire/cakewire)**  
+Dépôt : **[github.com/arbims/Cakewire](https://github.com/arbims/Cakewire)**
+
+**Installation stable** (release taguée, ex. `v1.0.0`) :
+
 ```bash
 composer require cakewire/cakewire
 ```
 
-`config/plugins.php` :
+**Branche `main` avant première release** (projet en `minimum-stability: stable` par défaut) :
+
+```bash
+composer require cakewire/cakewire:dev-main@dev
+```
+
+Ou ajoutez temporairement dans le `composer.json` de l’application :
+
+```json
+{
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+```
+
+Puis `composer require cakewire/cakewire:dev-main`.
+
+**Installation depuis GitHub** (sans Packagist) :
+
+```json
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/arbims/Cakewire"
+        }
+    ],
+    "require": {
+        "cakewire/cakewire": "^1.0"
+    }
+}
+```
+
+Après `composer update`, le plugin est installé sous `vendor/cakewire/cakewire/`.
+L’installer CakePHP l’enregistre automatiquement si `cakephp/plugin-installer` est autorisé.
+
+`config/plugins.php` (si besoin de forcer l’activation) :
 
 ```php
 return [

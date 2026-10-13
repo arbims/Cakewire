@@ -9,6 +9,21 @@ Composants **CakePHP** full-stack, syntaxe **`wire:*`** et modèle mental **[Liv
 | **HTML (web)** | `/cake_wire/doc/index.html` — dossier `webroot/doc/` |
 | **Markdown** | [DOCUMENTATION.md](./DOCUMENTATION.md) — source complète du plugin |
 
+## Installation
+
+```bash
+# Release stable (tag v1.x sur GitHub)
+composer require cakewire/cakewire
+
+# Branche main uniquement (avant tag stable)
+composer require cakewire/cakewire:dev-main@dev
+```
+
+- Packagist : https://packagist.org/packages/cakewire/cakewire  
+- Code : https://github.com/arbims/Cakewire  
+
+Documentation HTML (depuis une app qui charge le plugin) : `/cake_wire/doc/index.html`
+
 ## Démarrage rapide
 
 ```php
