@@ -84,7 +84,17 @@ Puis `composer require cakewire/cakewire:dev-main`.
 ```
 
 Après `composer update`, le plugin est installé sous `vendor/cakewire/cakewire/`.
-L’installer CakePHP l’enregistre automatiquement si `cakephp/plugin-installer` est autorisé.
+L’installer CakePHP l’enregistre automatiquement si le plugin Composer est autorisé :
+
+```json
+"config": {
+    "allow-plugins": {
+        "cakephp/plugin-installer": true
+    }
+}
+```
+
+Sur [Packagist](https://packagist.org/packages/cakewire/cakewire), cliquez **Update** après avoir poussé un tag (`v1.0.0`, …) si la version stable n’apparaît pas encore.
 
 `config/plugins.php` (si besoin de forcer l’activation) :
 
