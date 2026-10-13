@@ -32,6 +32,12 @@
         <main class="doc-content">
             <h1>Composants &amp; vues</h1>
 
+            <h2>Génération CLI</h2>
+            <pre><code>bin/cake cakewire component TodoList
+bin/cake cakewire component TodoList --register
+bin/cake cakewire component Reports --view=reports/index --force</code></pre>
+            <p>Crée <code>src/CakeWire/TodoListComponent.php</code> et <code>templates/CakeWire/todo-list.php</code>.</p>
+
             <h2>Classe de base</h2>
             <p>Étendez <code>CakeWire\Component\Component</code>. Déclarez :</p>
             <ul>

@@ -3,11 +3,21 @@ declare(strict_types=1);
 
 namespace CakeWire;
 
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Routing\RouteBuilder;
 
 class CakeWirePlugin extends BasePlugin
 {
+    /**
+     * @param \Cake\Console\CommandCollection $commands Command collection.
+     * @return \Cake\Console\CommandCollection
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        return parent::console($commands);
+    }
+
     /**
      * Registers the private endpoint used by the Alpine runtime.
      *

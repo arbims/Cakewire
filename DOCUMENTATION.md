@@ -150,6 +150,30 @@ Configure::write('CakeWire.components.contact-form', \App\CakeWire\ContactFormCo
 
 Alias : `[a-z][a-z0-9-]*` uniquement.
 
+### Générer un composant (CLI)
+
+Depuis la racine de l’application CakePHP :
+
+```bash
+bin/cake cakewire component TodoList
+bin/cake cakewire component TodoList --register
+bin/cake cakewire component Reports --alias=reports --view=reports/index --force
+```
+
+Crée par défaut :
+
+- `src/CakeWire/TodoListComponent.php` — classe avec `render()` → `view('todo-list')`
+- `templates/CakeWire/todo-list.php` — template minimal
+
+Options utiles : `--register` / `-r` (ajoute `Configure::write` dans `config/bootstrap.php`), `--no-template`, `--force`.
+
+Configuration optionnelle :
+
+```php
+Configure::write('CakeWire.generator.namespace', 'App\\CakeWire');
+Configure::write('CakeWire.generator.componentPath', ROOT . 'src' . DS . 'CakeWire' . DS);
+```
+
 ### Monter un composant
 
 ```php

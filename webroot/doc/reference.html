@@ -80,6 +80,9 @@ protected array $uploads = ['avatar'];</code></pre>
 @error('field')
 &lt;button wire:click="save"&gt;…&lt;/button&gt;</code></pre>
 
+            <h2>CLI</h2>
+            <pre><code>bin/cake cakewire component MyFeature [--register] [--force]</code></pre>
+
             <h2>Helper</h2>
             <pre><code>&lt;?= $this-&gt;CakeWire-&gt;component('counter', ['count' =&gt; 0]) ?&gt;
 &lt;?= $this-&gt;CakeWire-&gt;scripts() ?&gt;</code></pre>

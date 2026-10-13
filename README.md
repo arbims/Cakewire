@@ -24,6 +24,13 @@ composer require cakewire/cakewire:dev-main@dev
 
 Documentation HTML (depuis une app qui charge le plugin) : `/cake_wire/doc/index.html`
 
+## Générer un composant
+
+```bash
+bin/cake cakewire component TodoList
+bin/cake cakewire component TodoList --register
+```
+
 ## Démarrage rapide
 
 ```php
